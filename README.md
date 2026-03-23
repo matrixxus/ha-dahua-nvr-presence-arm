@@ -67,7 +67,7 @@ Or manually:
 
 ## Dashboard (optional)
 
-See [`lovelace/kamery_view.yaml`](lovelace/kamery_view.yaml) for an example camera dashboard view with:
+See [`lovelace/cameras_view.yaml`](lovelace/cameras_view.yaml) for an example camera dashboard view with:
 - Arm/disarm toggle with green/red conditional styling (requires Card Mod)
 - NVR state indicator
 - Household presence tile
@@ -89,21 +89,6 @@ table.DisableLinkage.Enable=false
 Where `false` = linkage enabled (armed) and `true` = linkage disabled (disarmed).
 
 Tested with Dahua NVR models supporting `configManager.cgi`. If your NVR returns a different response format, you may need to adjust the `value_template` in the REST sensor.
-
-## Repository structure
-
-```
-dahua-nvr-presence-arm/
-├── README.md
-├── LICENSE
-├── packages/
-│   └── dahua_nvr.yaml                       # Entities: sensor, switch, REST commands, group
-├── blueprints/
-│   └── automation/
-│       └── dahua_nvr_presence_arm.yaml      # Automation blueprint
-└── lovelace/
-    └── kamery_view.yaml                     # Example dashboard view
-```
 
 ## License
 

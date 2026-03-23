@@ -1,0 +1,103 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Example Lovelace view for the Dahua NVR Presence Arm setup
+#
+#  This is a sections-type view with max_columns: 2.
+#  Paste into your dashboard's raw config editor (per-view).
+#
+#  Requirements:
+#    - card-mod (for green/red conditional styling)
+#    - advanced-camera-card (for camera feeds)
+#
+#  Adjust camera_entity values to match your NVR channels.
+# ═══════════════════════════════════════════════════════════════════════════════
+title: Cameras
+path: cameras
+type: sections
+max_columns: 2
+dense_section_placement: false
+cards: []
+sections:
+  # Controls row — spans both columns
+  - type: grid
+    column_span: 2
+    cards:
+      - type: tile
+        entity: switch.cameras_armed
+        name: Cameras
+        features:
+          - type: toggle
+        features_position: inline
+        vertical: false
+        hide_state: true
+        grid_options:
+          columns: 3
+          rows: 1
+        card_mod:
+          style: |
+            ha-card {
+              --tile-color: {{ 'var(--green-color)' if is_state('switch.cameras_armed', 'on') else 'var(--red-color)' }};
+            }
+            ha-state-icon {
+              --tile-icon-color: {{ 'var(--green-color)' if is_state('switch.cameras_armed', 'on') else 'var(--red-color)' }};
+            }
+      - type: tile
+        entity: sensor.dahua_nvr_disarm_state
+        name: NVR State
+        show_state: true
+        icon: mdi:shield-home
+        grid_options:
+          columns: 3
+          rows: 1
+        card_mod:
+          style: |
+            ha-card {
+              --tile-color: {{ 'var(--green-color)' if is_state('sensor.dahua_nvr_disarm_state', 'armed') else 'var(--red-color)' }};
+            }
+      - type: tile
+        entity: group.household
+        name: Household
+        show_state: true
+        icon: mdi:home-account
+        color: indigo
+        grid_options:
+          columns: 3
+          rows: 1
+  # Camera feeds — one per section, 2 per row
+  - type: grid
+    cards:
+      - type: custom:advanced-camera-card
+        cameras:
+          - camera_entity: camera.YOUR_NVR_CHANNEL_1
+        menu:
+          buttons:
+            iris:
+              enabled: false
+            expand:
+              permanent: true
+              enabled: true
+            fullscreen:
+              permanent: true
+        dimensions:
+          aspect_ratio_mode: dynamic
+        live:
+          preload: false
+          lazy_load: false
+  - type: grid
+    cards:
+      - type: custom:advanced-camera-card
+        cameras:
+          - camera_entity: camera.YOUR_NVR_CHANNEL_2
+        menu:
+          buttons:
+            iris:
+              enabled: false
+            expand:
+              permanent: true
+              enabled: true
+            fullscreen:
+              permanent: true
+        dimensions:
+          aspect_ratio_mode: dynamic
+        live:
+          preload: false
+          lazy_load: false

@@ -40,7 +40,7 @@ This works by toggling the Dahua `DisableLinkage` setting via the NVR's CGI API.
 
 ### Step 2: Blueprint (automations)
 
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/matrixxus/dahua-nvr-presence-arm/blob/main/blueprints/automation/dahua_nvr_presence_arm.yaml)
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/matrixxus/ha-dahua-nvr-presence-arm/blob/main/blueprints/automation/dahua_nvr_presence_arm.yaml)
 
 Or manually:
 1. Copy [`blueprints/automation/dahua_nvr_presence_arm.yaml`](blueprints/automation/dahua_nvr_presence_arm.yaml) to `/config/blueprints/automation/dahua_nvr/`

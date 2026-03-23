@@ -1,0 +1,141 @@
+blueprint:
+  name: Dahua NVR Arm/Disarm — Presence & Night Mode
+  description: >
+    Automatically arms and disarms a Dahua NVR based on household presence,
+    with a mandatory night-mode override (armed every night regardless of presence).
+
+
+    **How it works:**
+
+    - Arms the NVR when everyone leaves home
+
+    - Disarms when someone arrives (only outside night hours)
+
+    - Arms at night start time every day (even if you're home)
+
+    - Disarms at morning time if someone is home
+
+
+    **Prerequisites:**
+
+    You need the companion dahua_nvr.yaml package file installed which provides:
+
+    - `sensor.dahua_nvr_disarm_state` (REST sensor polling the NVR)
+
+    - `switch.cameras_armed` (template switch for toggling)
+
+    - `rest_command.dahua_arm` / `rest_command.dahua_disarm`
+
+
+    See: https://github.com/matrixxus/dahua-nvr-presence-arm
+  domain: automation
+  author: matrixxus
+  source_url: https://github.com/matrixxus/dahua-nvr-presence-arm/blob/main/blueprints/automation/dahua_nvr_presence_arm.yaml
+  input:
+    controls:
+      name: Controls
+      description: Core entities for the NVR and presence tracking
+      collapsed: false
+      input:
+        cameras_switch:
+          name: Cameras Armed Switch
+          description: The template switch that controls arming/disarming the NVR.
+          default:
+            entity_id: switch.cameras_armed
+          selector:
+            target:
+              entity:
+                domain: switch
+        presence_group:
+          name: Presence Group or Person
+          description: >
+            A group or person entity that tracks household presence.
+            Use a group (recommended) — its state is "home" if ANY member is home,
+            and "not_home" only when ALL members are away.
+          selector:
+            entity:
+              domain:
+                - group
+                - person
+    schedule:
+      name: Night Mode Schedule
+      description: When to force-arm regardless of presence
+      collapsed: false
+      input:
+        night_start:
+          name: Night Mode Start
+          description: Cameras arm at this time every day, even if you're home.
+          default: "21:00:00"
+          selector:
+            time: {}
+        morning_end:
+          name: Morning Disarm Time
+          description: Cameras disarm at this time if someone is home.
+          default: "07:00:00"
+          selector:
+            time: {}
+
+variables:
+  night_start: !input night_start
+  morning_end: !input morning_end
+
+triggers:
+  - trigger: state
+    entity_id: !input presence_group
+    to: not_home
+    id: everyone_left
+
+  - trigger: state
+    entity_id: !input presence_group
+    to: home
+    id: someone_arrived
+
+  - trigger: time
+    at: !input night_start
+    id: night_start
+
+  - trigger: time
+    at: !input morning_end
+    id: morning_end
+
+actions:
+  - choose:
+      # Everyone left → arm
+      - conditions:
+          - condition: trigger
+            id: everyone_left
+        sequence:
+          - action: switch.turn_on
+            target: !input cameras_switch
+
+      # Someone arrived → disarm (only outside night hours)
+      - conditions:
+          - condition: trigger
+            id: someone_arrived
+          - condition: time
+            after: !input morning_end
+            before: !input night_start
+        sequence:
+          - action: switch.turn_off
+            target: !input cameras_switch
+
+      # Night mode → arm regardless
+      - conditions:
+          - condition: trigger
+            id: night_start
+        sequence:
+          - action: switch.turn_on
+            target: !input cameras_switch
+
+      # Morning → disarm if someone is home
+      - conditions:
+          - condition: trigger
+            id: morning_end
+          - condition: state
+            entity_id: !input presence_group
+            state: home
+        sequence:
+          - action: switch.turn_off
+            target: !input cameras_switch
+
+mode: single

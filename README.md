@@ -20,6 +20,16 @@ This works by toggling the Dahua `DisableLinkage` setting via the NVR's CGI API.
 - [Card Mod](https://github.com/thomasloven/lovelace-card-mod) *(optional, for dashboard styling)*
 - [Advanced Camera Card](https://github.com/dermotduffy/advanced-camera-card) *(optional, for camera feed dashboard)*
 
+## NVR prerequisite
+ 
+You must change `Event Notifications` on the NVR itself. This is what allows `DisableLinkage` to control whether DMSS push notifications are sent.
+ 
+In the NVR web UI, go to:
+ 
+**Setting → Event → Alarm → Disarming → Event Notifications → set to `Close`**
+ 
+> ⚠️ **Important:** If Event Notifications remains disabled while the system is not armed, all clients (mobile app, platform, cloud) will only receive device events related to errors and faults (network error, storage error, security alarm, hardware fault). All functions related to Event Notifications will not be available. This is expected — the `DisableLinkage` toggle controlled by this automation effectively replaces the manual Event Notifications switch.
+
 ## Installation
 
 ### Step 1: Package file (entities)

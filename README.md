@@ -1,6 +1,6 @@
 # Dahua NVR Presence Arm/Disarm for Home Assistant
 
-Automatically arm and disarm your Dahua NVR based on household presence, with a night-mode override that keeps cameras armed while you sleep.
+Automatically arm and disarm your Dahua NVR based on household presence, with a night-mode override that keeps cameras armed while you sleep. 
 
 ## What it does
 
@@ -24,7 +24,7 @@ This works by toggling the Dahua `DisableLinkage` setting via the NVR's CGI API.
 
 ### Step 1: Package file (entities)
 
-1. Copy [`packages/dahua_nvr.yaml`](packages/dahua_nvr.yaml) to your HA `/config/packages/` directory
+1. Copy [`dahua_nvr.yaml`](dahua_nvr.yaml) to your HA `/config/packages/` directory
 2. Add to your `secrets.yaml`:
    ```yaml
    dahua_user: "admin"
@@ -40,10 +40,10 @@ This works by toggling the Dahua `DisableLinkage` setting via the NVR's CGI API.
 
 ### Step 2: Blueprint (automations)
 
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/matrixxus/ha-dahua-nvr-presence-arm/blob/main/blueprints/automation/dahua_nvr_presence_arm.yaml)
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/matrixxus/ha-dahua-nvr-presence-arm/blob/main/dahua_nvr_presence_arm.yaml)
 
 Or manually:
-1. Copy [`blueprints/automation/dahua_nvr_presence_arm.yaml`](blueprints/automation/dahua_nvr_presence_arm.yaml) to `/config/blueprints/automation/dahua_nvr/`
+1. Copy [`dahua_nvr_presence_arm.yaml`](dahua_nvr_presence_arm.yaml) to `/config/blueprints/automation/dahua_nvr/`
 2. Go to **Developer Tools → YAML → Reload Automations**
 3. Go to **Settings → Automations → Blueprints** → find "Dahua NVR Arm/Disarm" → **Create Automation**
 4. Configure:
@@ -67,7 +67,7 @@ Or manually:
 
 ## Dashboard (optional)
 
-See [`lovelace/cameras_view.yaml`](lovelace/cameras_view.yaml) for an example camera dashboard view with:
+See [`cameras_view.yaml`](cameras_view.yaml) for an example camera dashboard view with:
 - Arm/disarm toggle with green/red conditional styling (requires Card Mod)
 - NVR state indicator
 - Household presence tile
@@ -89,6 +89,17 @@ table.DisableLinkage.Enable=false
 Where `false` = linkage enabled (armed) and `true` = linkage disabled (disarmed).
 
 Tested with Dahua NVR models supporting `configManager.cgi`. If your NVR returns a different response format, you may need to adjust the `value_template` in the REST sensor.
+
+## Repository structure
+
+```
+ha-dahua-nvr-presence-arm/
+├── README.md
+├── LICENSE
+├── dahua_nvr.yaml                    # Package: sensor, switch, REST commands, group
+├── dahua_nvr_presence_arm.yaml       # Blueprint: automation with presence + night mode
+└── cameras_view.yaml                 # Example dashboard view (optional)
+```
 
 ## License
 

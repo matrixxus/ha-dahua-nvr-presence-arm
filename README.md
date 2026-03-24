@@ -100,17 +100,6 @@ Where `false` = linkage enabled (armed) and `true` = linkage disabled (disarmed)
 
 Tested with Dahua NVR models supporting `configManager.cgi`. If your NVR returns a different response format, you may need to adjust the `value_template` in the REST sensor.
 
-## Repository structure
-
-```
-ha-dahua-nvr-presence-arm/
-├── README.md
-├── LICENSE
-├── dahua_nvr.yaml                    # Package: sensor, switch, REST commands, group
-├── dahua_nvr_presence_arm.yaml       # Blueprint: automation with presence + night mode
-└── cameras_view.yaml                 # Example dashboard view (optional)
-```
-
 ## License
 
 MIT
